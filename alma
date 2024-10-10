@@ -1,0 +1,305 @@
+--Farmer Crosses River Puzzle.
+other_bank(e,w). other_bank(w,e).
+%Farmer,Wolf,Goat,Cabbage
+move([X,X,Goat,Cabbage],wolf,[Y,Y,Goat,Cabbage]):other_bank(X,Y).
+move([X,Wolf,X,Cabbage],goat,[Y,Wolf,Y,Cabbage]):-other_bank(X,Y).
+move([X,Wolf,Goat,X],cabbage,[Y,Wolf,Goat,Y]):-other_bank(X,Y).
+move([X,Wolf,Goat,Cabbage],farmer,[Y,Wolf,Goat,Cabbage]):-other_bank(X,Y).
+safety_check(X,X,_). safety_check(X,_,X).
+status(Farmer,Wolf,Goat,Cabbage):- safety_check(Farmer,Goat,Cabbage),
+safety_check(Farmer,Goat,Wolf).
+solution([e,e,e,e], []).
+solution(Config, [Move|Othermoves]):-
+move(Config, Move, Nextconfig), status(Nextconfig),
+solution(Nextconfig,
+Othermoves).
+
+--Four Queen Puzzle.--
+four_queens(Solution):-
+ Solution = [Q1,Q2,Q3,Q4],
+ permutation([1,2,3,4], Solution),
+ safe_queens(Solution).
+safe_queens([]).
+safe_queens([Q|Others]):-
+ safe(Q,Others,1),
+ safe_queens(Others).
+safe(_,[],_).
+safe(Q,[Next|Others],Distance):-
+ Q =\= Next,
+ abs(Q-Next) =\= Distance,
+ Nextdistance is Distance+1,
+ safe(Q, Others, Nextdistance).
+
+--Water Jug Problem
+water_jug(X,Y) :-
+ X>4, Y<3, write('4L jug is
+Overflowed'),nl.
+water_jug(X,Y) :-
+ X < 4, Y > 3, write('3L jug
+is Overflowed'),nl.
+water_jug(X,Y) :-
+ X > 4, Y > 3, write('Both jug
+are Overflowed'),nl.
+water_jug(X,Y) :-
+ (X =:= 0, Y =:= 0, nl,write('4L:4 & 3L:0 (Action: Fill 4L jug.)'),XX is 4, water_jug(XX,Y));
+ (X =:= 0, Y =:= 0, nl, write('4L:0 & 3L:3(Action: Fill 3L Jug.)'),YY is 3,water_jug(X,YY));
+ (X =:= 4, Y =:= 0, nl, write('4L:1 & 3L:3(Action: pour water from 4L to 3L jug.)'),XX is X-3, YY is 3,
+water_jug(XX,YY));
+ (X =:= 0, Y =:= 3,nl, write('4L:3 & 3L:0(Action: pour water from 3L jug to 4L jug.)'),XX is 3, YY is
+0, water_jug(XX,YY));
+ (X =:= 1, Y =:= 3,nl, write('4L:1 & 3L:0(Action:Empty 3L jug.)'),YY is 0, water_jug(X,YY));
+ (X =:= 3, Y =:= 0,nl, write('4L:3 & 3L:0(Action:Fill 3L jug.)'), YY is 3, water_jug(X,YY));
+ (X =:= 1, Y =:= 0,nl, write('4L:1 & 3L:0(Action:Pour water from 4L jug to 3L jug.)'), XX is Y,YY is X,
+water_jug(X,YY));
+ (X =:= 3, Y =:= 3,nl, write('4L:3 & 3L:3(Action:Pour water from 3L jug to 4L jug.)'), XX is X+1,
+Y,YY is Y-1, water_jug(XX,YY);
+ (X =:= 0, Y =:= 1,nl, write('4L:0 & 3L:1(Action:Fill 4L jug.)'), XX is 4, water_jug(XX,Y));
+ (X =:= 4, Y =:= 2,nl, write('4L:4 & 3L:2(Action:Empty 4L jug.)'), XX is 0, water_jug(XX,Y));
+ (X =:= 4, Y =:= 1,nl, write('4L:4 & 3L:1(Action:Pour water from 4L jug to 3L jug untill 3L is
+full.)'), XX is X-2, YY is Y+2, water_jug(XX,YY));
+ (X =:= 0, Y=:= 2,nl, write('4L:0 & 3L:2(Action:Pour water from 3L jug to 4L jug.)'), XX is Y, YY is
+X, water_jug(XX,YY));
+ (X =:= 2, Y =:= 3,nl, write('4L:2 & 3L:3(Action:Empty 3L jug)'), YY is 0, water_jug(X,YY));
+ (X =:= 2, Y =:= 0,nl, write('4L:2 & 3L:0(Action: Goal State is Reached)'))).
+
+-?water_jug(0,0).
+
+--Factorial and Fibonacci numbers
+factorial(0,1).
+factorial(N, Result):-
+N > 0, N1 is N-1,
+factorial(N1, Result1),
+Result is N * Result1.
+?- factorial(N, Result).
+fib(0,0).
+fib(1,1).
+fib(N, Result):-
+N >0,
+N1 is N – 1, N2
+is N – 2,
+fib(N1,Result1),
+fib(N2, Result2),
+Result is Result1 + Result2.
+?- fib (5, Result).
+
+--list
+country(srilanka).
+country(turkey).
+country(india).
+country(singapore).
+country(maldives).
+country(pakistan).
+countrylist(Countrylist):-
+findall(Country, country(Country), Countrylist).
+ascending(SortedList):-
+ findall(Country, country(Country), Countrylist),
+ sort(Countrylist, SortedList).
+iscountry(X):-
+ country(X) -> write(X),write(' is a country');
+ write(X),write(' is not a country').
+count(Count):-
+ findall(Country, country(Country), Countrylist),
+ length(Countrylist, Count).
+
+--table
+employee(111,peter,25,accountant,50000,75,162).
+employee(112,askar,37,software_Engineer,150000,70,165).
+employee(113,amal,28,system_analyst,100000,55,170).
+employee(114,kumar,40,network_Engineer,160000,60,152).
+employee(115,divya,37,hrm,80000,45,148).
+employee(116,selvanayagi,35,it_technician,75000,40,150).
+employee(117,malar,23,web_developer,85000,35,158).
+employee(118,suresh,25,data_scientist,95000,78,180).
+employee(119,fathima,23,it_director,70000,42,155).
+employee(120,kavya,45,qa_tester,85000,50,160).
+empcount(EmpCount):-
+ findall(Id, employee(Id,_,_,_,_,_,_), Ids),
+ length(Ids, EmpCount).
+employees(Namelist):-
+ findall(Name, employee(_,Name,_,_,_,_,_), Namelist).
+average(Average):-
+ findall(Salary, employee(_,_,_,_,Salary,_,_), Salarylist),
+ sumlist(Salarylist, Totalsalary),
+ length(Salarylist, Empcount),
+ Average is Totalsalary/Empcount.
+promotion(Name,Status):-
+ employee(_,Name,_,_,Salary,_,_),
+ (Salary>=80000 -> Status = "Get the promotion"; Status = "Can't get the promotion").
+bmi(Id,Name,Bmi):-
+ employee(Id,Name,_,_,_,Weight,Height),
+ Bmi is Weight/(Height*Height).
+blooddonation(Name,Status):-
+ employee(_,Name,Age,_,_,Weight,_),
+ (Age>=18, Weight>=50 -> Status = "Can donate blood";
+ Status = "Cannot donate blood").
+
+--tree
+%Define Males
+male(george).
+male(samith).
+male(philip).
+male(charles).
+male(mark).
+male(andrew).
+male(edward).
+male(william).
+male(harry).
+male(peter).
+%Define females
+female(mona).
+female(monisa).
+female(elizabeth).
+female(margaret).
+female(diana).
+female(anne).
+female(sarah).
+female(zara).
+female(johana).
+female(monalisa).
+%define parent relationship
+parent(george, elizabeth).
+parent(george, margaret).
+parent(mona, elizabeth).
+parent(mona, margaret).
+parent(philip, charles).
+parent(philip, anne).
+parent(philip, andrew).
+parent(philip, edward).
+parent(elizabeth, charles).
+parent(elizabeth, anne).
+parent(elizabeth, andrew).
+parent(elizabeth, edward).
+parent(samith, diana).
+parent(monisa, diana).
+parent(diana, harry).
+parent(diana, william).
+parent(charles, william).
+parent(charles, harry).
+parent(anne, peter).
+parent(anne, zara).
+parent(mark, peter).
+parent(mark, zara).
+parent(andrew, johana).
+parent(andrew, monalisa).
+parent(sarah, johana).
+parent(sarah, monalisa).
+%Define spouse
+spouse(george, mona).
+spouse(samith, monisa).
+spouse(philip, elizabeth).
+spouse(charles, diana).
+spouse(mark, anne).
+spouse(andrew, sarah).
+%Grandchild rule
+grandchild(X, Y) :- parent(Y, Z), parent(Z, X).
+%Great gradparent rule
+great_grandparent(X, Y) :- parent(X, Z), grandparent(Z, Y).
+%Daughter
+daughter(X, Y) :- female(X), parent(Y, X).
+%Son
+son(X, Y) :- male(X), parent(Y, X).
+%Aunt rule
+aunt(X, Y) :- female(X), sibling(X, Z), parent(Z, Y).
+%Uncle rule
+uncle(X, Y) :- male(X), sibling(X, Z), parent(Z, Y).
+%brother in law
+brother_in_law(X, Y) :- spouse(Y, Z), brother(X, Z); sibling(X, Z), spouse(Z, Y), male(X).
+%Sister in law
+sister_in_law(X, Y) :- spouse(Y, Z), brother(X, Z); sibling(X, Z), spouse(Z, Y), female(X).
+%First Cousin rule
+first_cousin(X, Y) :- parent(A, X), parent(B, Y), sibling(A, B).
+%Sibling Rule
+sibling(X, Y) :- parent(Z, X), parent(Z, Y), X\= Y.
+%Grandparent
+grandparent(X, Y) :- parent(X, Z), parent(Z, Y).
+%Brother
+brother(X,Y) :- male(X), sibling(X, Y).
+%Sister
+sister(X, Y) :- female(X), sibling(X, Y).
+
+?- grandparent(elizabeth, X).
+?- brother_in_law(X, diana).
+?- greatgrandparent(X, zara).
+?- parent(X, harry).
+?- cousin(X, william).
+?- grandparent(george, X).
+?- brother(X, andrew).
+?- sister(X, elizabeth).
+
+
+--missionary
+
+% Initial state: All missionaries and cannibals are on the left side.
+initial_state(state(3, 3, 0, 0, left)).
+
+% Goal state: All missionaries and cannibals are on the right side.
+goal_state(state(0, 0, 3, 3, right)).
+
+% Valid state predicate: Checks if a state is valid
+valid(state(ML, CL, MR, CR, _)) :-
+    ML >= 0, CL >= 0, MR >= 0, CR >= 0,
+    (ML = 0; ML >= CL),   % Left side: missionaries should not be outnumbered
+    (MR = 0; MR >= CR).   % Right side: missionaries should not be outnumbered
+
+% Moves definition
+move(state(ML, CL, MR, CR, left), state(ML2, CL2, MR2, CR2, right)) :-
+    % move 2 missionaries
+    ML2 is ML - 2, MR2 is MR + 2, CL2 is CL, CR2 is CR;
+    % move 2 cannibals
+    ML2 is ML, MR2 is MR, CL2 is CL - 2, CR2 is CR + 2;
+    % move 1 missionary and 1 cannibal
+    ML2 is ML - 1, MR2 is MR + 1, CL2 is CL - 1, CR2 is CR + 1;
+    % move 1 missionary
+    ML2 is ML - 1, MR2 is MR + 1, CL2 is CL, CR2 is CR;
+    % move 1 cannibal
+    ML2 is ML, MR2 is MR, CL2 is CL - 1, CR2 is CR + 1.
+
+move(state(ML, CL, MR, CR, right), state(ML2, CL2, MR2, CR2, left)) :-
+    % move 2 missionaries
+    ML2 is ML + 2, MR2 is MR - 2, CL2 is CL, CR2 is CR;
+    % move 2 cannibals
+    ML2 is ML, MR2 is MR, CL2 is CL + 2, CR2 is CR - 2;
+    % move 1 missionary and 1 cannibal
+    ML2 is ML + 1, MR2 is MR - 1, CL2 is CL + 1, CR2 is CR - 1;
+    % move 1 missionary
+    ML2 is ML + 1, MR2 is MR - 1, CL2 is CL, CR2 is CR;
+    % move 1 cannibal
+    ML2 is ML, MR2 is MR, CL2 is CL + 1, CR2 is CR - 1.
+
+% State transition: Defines a valid move from one state to another
+transition(State, NextState) :-
+    move(State, NextState),
+    valid(NextState).
+
+% Solve the problem
+solve :-
+    initial_state(State),
+    goal_state(Goal),
+    path(State, Goal, [State], Path),
+    print_path(Path).
+
+% Path-finding: Recursively find a path from the initial state to the goal state
+path(Goal, Goal, Path, Path).
+path(State, Goal, Visited, Path) :-
+    transition(State, NextState),
+    \+ member(NextState, Visited),  % Ensure that the state has not been visited
+    path(NextState, Goal, [NextState|Visited], Path).
+
+% Print the solution
+print_path([]).
+print_path([State|Rest]) :-
+    write(State), nl,
+    print_path(Rest).
+
+% Query to start the solution
+start :- solve.
+
+?-start.
+
+
+
+
+
+
+
+
